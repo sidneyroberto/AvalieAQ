@@ -1,0 +1,9 @@
+<div class="jumbotron">
+	<h1 class="text-center">Mapa de avaliações</h1>
+<div>
+    
+<ng-map center="[-20.4749181, -55.7862748]" zoom="14" default-style="false" style="height: 700px; width: 100%">
+    <div ng-repeat="avaliacao in avaliacoes">
+        <marker position="{{avaliacao.estabelecimento.nome + ' ' + avaliacao.estabelecimento.endereco + ' aquidauana ms'}}"></marker>
+    </div>
+</ng-map>
