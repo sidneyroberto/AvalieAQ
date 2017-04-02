@@ -1,0 +1,44 @@
+<div class="jumbotron">
+	<h1 class="text-center">Bem-vindo ao AvalieAQ!</h1>
+<div>
+
+<p ng-show="mensagem.texto">{{mensagem.texto}}</p>
+
+<div class="row">
+	<div class="col-lg-6">
+		<div class="input-group">
+			<span class="input-group-btn">
+				<a href="#!/avaliacao" class="btn btn-primary">Nova avaliação</a>
+			</span>
+			<input ng-model="filtro" type="search" class="form-control" placeholder="Digite parte do nome">
+		</div>
+	</div>
+</div>
+
+<p class="text-info" ng-hide="avaliacoes.length">Não há avaliações cadastradas</p>
+
+<div class="table-responsive">
+	<table	class="table table-hover">
+		<tr>
+			<th>Avaliador</th>
+			<th>Estabelecimento</th>
+			<th>Endereço</th>
+			<th>Avaliação</th>
+			<th>Data da visita</th>
+			<th>Ações</th>
+		</tr>
+		<tr ng-repeat="avaliacao in avaliacoes | filter: filtro">
+			<td>{{avaliacao.nomeAvaliador}}</td>
+			<td>{{avaliacao.estabelecimento.nome}}</td>
+			<td>{{avaliacao.estabelecimento.endereco}}</td>
+			<td><jk-rating-stars rating="avaliacao.quantidadeEstrelas" read-only="true" ></jk-rating-stars></td>
+			<td>{{avaliacao.dataVisita | date : "dd/MM/yyyy"}}</td>
+			<td	class="text-center">
+				<a href="#!/avaliacao/{{avaliacao._id}}" class="btn">
+		   			<span class="glyphicon glyphicon-edit"></span> 
+				</a>
+		   		<button ng-click="remove(avaliacao)" class="btn btn-link glyphicon glyphicon-trash"></button>
+			</td>
+		</tr>
+	</table>
+</div>

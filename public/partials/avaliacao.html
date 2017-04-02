@@ -1,0 +1,49 @@
+<h1 class="text-center">Avaliação</h1>
+
+<div ng-show="mensagem.sucesso" class="alert alert-success">
+	<p ng-show="mensagem.texto">{{mensagem.texto}}</p>
+</div>
+
+<div ng-show="mensagem.sucesso == false" class="alert alert-danger">
+	<p ng-show="mensagem.texto">{{mensagem.texto}}</p>
+</div>
+
+
+<form ng-submit="salva()">
+	<div class="form-group">
+		<label for="nome_avaliador">Avaliador</label>
+		<input type="text" class="form-control" id="nome_avaliador" name="nome_avaliador" required ng-model="avaliacao.nomeAvaliador"/>
+	</div>
+	<div class="form-group">
+		<label for="nome_estabelecimento">Nome do estabelecimento</label>
+		<input type="text" class="form-control" id="nome_estabelecimento" name="nome_estabelecimento" ng-model="avaliacao.estabelecimento.nome" required/>
+	</div>
+	<div class="form-group">
+		<label for="endereco_estabelecimento">Endereço do estabelecimento</label>
+		<input type="text" class="form-control" id="endereco_estabelecimento" name="endereco_estabelecimento" ng-model="avaliacao.estabelecimento.endereco" required/>
+	</div>
+	<div class="form-group">
+		<label for="avaliacao">Avaliação</label>
+		<jk-rating-stars  name="avaliacao" id="avaliacao" rating="avaliacao.quantidadeEstrelas" required></jk-rating-stars>
+	</div>
+	<div class="form-group">
+		<label for="data_visita">Data da visita</label>
+		<input type="date" class="form-control" id="data_visita" placeholder="dd/mm/aaaa" name="data_visita" ng-model="avaliacao.dataVisita" required />
+	</div>
+	<div class="form-group">
+		<label for="opiniao">Opinião</label>
+		<textarea class="form-control" id="opiniao" name="opiniao" ng-model="avaliacao.opiniao"></textarea>
+	</div>
+    <div class="form-group">
+        <label>Fotos da visita (até 3 fotos)</label>
+        <div class="button" ng-model="imagens" ngf-select ngf-multiple="true">Clique aqui para selecionar as fotos</div>
+        <div ng-repeat="imagem in imagens" class="imagens-upload">
+            <img ngf-thumbnail="imagem">
+            <span>{{imagem.progress ? imagem.progress + '%' : ''}}</span>
+        </div>
+    </div>
+	<div>
+		<button type="submit" class="btn btn-primary">Salvar</button>
+		<a	href="#!/" class="btn btn-default">Voltar</a>
+	</div>
+</form>
