@@ -79,39 +79,70 @@ module.exports = function(app) {
     
     var fs = require('fs');
     var mongoose = require('mongoose');
+	var rimraf = require('rimraf');
     var Grid = require('gridfs-stream');
     Grid.mongo = mongoose.mongo;
     
     controller.fazUploadDaFoto = function(req, res) {
         var gfs = Grid(mongoose.connection.db);
         var imagem = req.files.imagem;
+		var idAvaliacao = req.body.idAvaliacao;
         
         var writeStream = gfs.createWriteStream({
             filename: imagem.name,
             mode: 'w',
             content_type: imagem.mimetype,
             metadata: {
-                idFoto: req.body.idAvaliacao
+                idAvaliacao: idAvaliacao
             }
         });
 
-        fs.writeFile('./uploads/' + imagem.name, imagem.data, function(erro) {
+		var pastaRaiz = './uploads/';
+        var pastaArquivo = pastaRaiz + idAvaliacao + '/';
+        if (!fs.existsSync(pastaRaiz)) {
+            fs.mkdirSync(pastaRaiz);
+        }
+        if (!fs.existsSync(pastaArquivo)) {
+            fs.mkdirSync(pastaArquivo);
+        }
+        var caminhoArquivo = pastaArquivo + imagem.name;
+
+        fs.writeFile(caminhoArquivo, imagem.data, function(erro) {
             if(erro) {
                 console.log(erro);
             }
-            console.log("Arquivo '" + imagem.name + "' salvo na pasta ./uploads!");
+            console.log("Arquivo '" + imagem.name + "' salvo  em " + caminhoArquivo + ".");
         });
 
         writeStream.on('close', function(arquivo) {
             console.log('Foto salva com sucesso!');
             res.send('Foto salva com sucesso!');
+			rimraf(pastaArquivo, function () {
+                console.log('Pasta ' + pastaArquivo + ' removida.')
+            });
         });
 
-        fs.createReadStream('./uploads/' + imagem.name).pipe(writeStream);
+        fs.createReadStream(caminhoArquivo).pipe(writeStream);
     };
     
     controller.obtemFoto = function(req, res) {
-            
+		var idAvaliacao = req.params.idAvaliacao;
+		var nomeImagem = req.params.nomeImagem;
+		var gfs = Grid(mongoose.connection.db);
+		gfs.findOne({filename: nomeImagem, metadata: {idAvaliacao: idAvaliacao}}, function(erro, imagem) {
+			if(erro) {
+				console.log(erro);
+				res.status(500).json(erro);
+			} else {
+				if(imagem) {
+					res.setHeader('Content-type', imagem.contentType);
+                    res.setHeader('Content-disposition', 'filename=' + imagem.filename);
+                    gfs.createReadStream({"_id": imagem._id}).pipe(res);
+				} else {
+					res.status(404).json('Imagem não encontrada.');
+				}
+			}
+		});
     };
     
 	

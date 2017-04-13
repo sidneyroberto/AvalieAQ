@@ -18,6 +18,11 @@ angular.module('avalieaq').controller('AvaliacaoController',
 	   
         $scope.imagens = [];
 		$scope.salva = function() {
+			$scope.imagens = $scope.imagens.slice(0, 3);
+			$scope.avaliacao.midia = [];
+			angular.forEach($scope.imagens, function(imagem) {
+				$scope.avaliacao.midia.push(imagem.name);
+			});
 			$scope.avaliacao.$save()
 				.then(
 					function(avaliacao) {
@@ -34,7 +39,6 @@ angular.module('avalieaq').controller('AvaliacaoController',
     
         
         function fazUploadDasImagens(idAvaliacao) {
-            $scope.imagens = $scope.imagens.slice(0, 3);
             if($scope.imagens && $scope.imagens.length) {
                 angular.forEach($scope.imagens, function(imagem) {
                     

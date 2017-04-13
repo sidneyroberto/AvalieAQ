@@ -8,7 +8,7 @@ module.exports = function(app) {
 		.delete(controller.removeAvaliacao);
     app.route('/upload')
         .post(controller.fazUploadDaFoto);
-    app.route('/upload/:nomeArquivo')
-        .post(controller.obtemFoto);
+    app.route('/download/:idAvaliacao/:nomeImagem')
+        .get(controller.obtemFoto);
 };
 

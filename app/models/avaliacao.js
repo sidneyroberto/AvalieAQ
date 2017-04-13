@@ -28,7 +28,8 @@ module.exports = function() {
 		dataVisita: {
 			type: Date,
 			default: Date.now
-		}
+		},
+		midia: [String]
 	});
 	
 	return mongoose.model('Avaliacao', schema);
